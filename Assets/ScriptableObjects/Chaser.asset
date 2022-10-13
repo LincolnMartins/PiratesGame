@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 758b3c6e8d6d2414d8a7cf418835cc3d, type: 3}
+  m_Name: Chaser
+  m_EditorClassIdentifier: 
+  ramDamage: 25
+  shootDamage: 0
+  maxHealth: 33
+  shipType: Chaser
+  shipStates:
+  - {fileID: 21300000, guid: 3298445ecc36ceb4caa72b7e02536f51, type: 3}
+  - {fileID: 21300000, guid: bd9943c1ad678924d84a700c3df5b936, type: 3}
+  - {fileID: 21300000, guid: a5627b3db6e8687429bb519046afb7b6, type: 3}
+  - {fileID: 21300000, guid: 73f2b072e8383cd4eba52f8716a4c6bc, type: 3}
