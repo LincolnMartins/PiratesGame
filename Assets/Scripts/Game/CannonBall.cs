@@ -22,14 +22,14 @@ public class CannonBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.parent.gameObject.tag == "Enemy")
+        if (transform.parent.gameObject.tag.Equals("Enemy"))
         {
             transform.position += moveDirection * shootSpeed * Time.smoothDeltaTime;
-            if (Vector2.Distance(initialPos, transform.position) > shootRange && !hit) gameObject.SetActive(false);
+            if (Vector2.Distance(initialPos, transform.position) >= shootRange && !hit) gameObject.SetActive(false);
         }
         else
         {
-            if (Vector2.Distance(initialPos, transform.position) <= shootRange && !hit)
+            if (Vector2.Distance(initialPos, transform.position) < shootRange && !hit)
             {
                 switch (shootDirection)
                 {
@@ -44,21 +44,23 @@ public class CannonBall : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (transform.parent.gameObject.tag != collision.gameObject.tag && collision.gameObject.tag != "Untagged")
+        if (transform.parent.gameObject != collision.gameObject)
         {
-            if (collision.gameObject.tag == "Player" && collision.gameObject.GetComponent<PlayerController>().health > 0)
+            if (!transform.parent.gameObject.tag.Equals(collision.gameObject.tag))
             {
-                collision.gameObject.GetComponent<PlayerController>().health -= transform.parent.gameObject.GetComponent<EnemyController>().ship.shootDamage;
-                GetComponent<Animator>().SetTrigger("Hit");
-                StartCoroutine(DestroyBall());
-            }
-            else if (collision.gameObject.tag == "Enemy" && collision.gameObject.GetComponent<EnemyController>().health > 0)
-            {
-                collision.gameObject.GetComponent<EnemyController>().health -= transform.parent.gameObject.GetComponent<PlayerController>().playerDamage;
-                if(collision.gameObject.GetComponent<EnemyController>().ship.shipType == "Chaser") collision.gameObject.GetComponent<NavMeshAgent>().isStopped = true;
+                if (collision.gameObject.tag.Equals("Player") && collision.gameObject.GetComponent<PlayerController>().health > 0)
+                {
+                    collision.gameObject.GetComponent<PlayerController>().health -= transform.parent.gameObject.GetComponent<EnemyController>().ship.shootDamage;
+                    GetComponent<Animator>().SetTrigger("Hit");
+                    StartCoroutine(DestroyBall());
+                }
+                else if (collision.gameObject.tag.Equals("Enemy") && collision.gameObject.GetComponent<EnemyController>().health > 0)
+                {
+                    collision.gameObject.GetComponent<EnemyController>().health -= transform.parent.gameObject.GetComponent<PlayerController>().playerDamage;
 
-                GetComponent<Animator>().SetTrigger("Hit");
-                StartCoroutine(DestroyBall());
+                    GetComponent<Animator>().SetTrigger("Hit");
+                    StartCoroutine(DestroyBall());
+                }
             }
         }
     }
@@ -67,7 +69,7 @@ public class CannonBall : MonoBehaviour
     {
         hit = true;
         yield return new WaitForSeconds(0.15f);
-        gameObject.SetActive(false);
         hit = false;
+        gameObject.SetActive(false);
     }
 }

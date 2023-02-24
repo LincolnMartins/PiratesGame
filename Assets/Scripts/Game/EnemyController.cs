@@ -27,37 +27,39 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Difference = transform.position - PrevLocation;
-        PrevLocation = transform.position;
-
-        transform.up = -Difference;
-
-        GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
-
-        if (reloadTimer > 0) reloadTimer -= Time.deltaTime;
-
-        if (ship.shipType == "Shooter")
+        if (!GameController.gameManager.victory && GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().health > 0)
         {
-            if (GetComponent<NavMeshAgent>().remainingDistance <= 3)
+            Difference = transform.position - PrevLocation;
+            PrevLocation = transform.position;
+
+            transform.up = -Difference;
+
+            if (reloadTimer > 0) reloadTimer -= Time.deltaTime;
+
+            if (health > 0)
             {
-                if (reloadTimer < 1)
+                GetComponent<NavMeshAgent>().SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+
+                if (ship.shipType.Equals("Shooter") && GetComponent<NavMeshAgent>().remainingDistance <= 3 && reloadTimer < 1)
                 {
                     reloadTimer = 0;
                     Shoot();
                 }
             }
-        }
 
-        if (health >= ship.maxHealth && GetComponent<SpriteRenderer>().sprite != ship.shipStates[0]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[0];
-        else if ((health <= ship.maxHealth / 2 && health > ship.maxHealth / 4) && GetComponent<SpriteRenderer>().sprite != ship.shipStates[1]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[1];
-        else if ((health <= ship.maxHealth / 4 && health > 0) && GetComponent<SpriteRenderer>().sprite != ship.shipStates[2]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[2];
-        else if (health <= 0 && GetComponent<SpriteRenderer>().sprite != ship.shipStates[3])
-        {
-            GetComponent<SpriteRenderer>().sprite = ship.shipStates[3];
-            StartCoroutine(RemoveShip());
-        }
+            if (health >= ship.maxHealth && GetComponent<SpriteRenderer>().sprite != ship.shipStates[0]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[0];
+            else if ((health <= ship.maxHealth / 2 && health > ship.maxHealth / 4) && GetComponent<SpriteRenderer>().sprite != ship.shipStates[1]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[1];
+            else if ((health <= ship.maxHealth / 4 && health > 0) && GetComponent<SpriteRenderer>().sprite != ship.shipStates[2]) GetComponent<SpriteRenderer>().sprite = ship.shipStates[2];
+            else if (health <= 0 && GetComponent<SpriteRenderer>().sprite != ship.shipStates[3])
+            {
+                GetComponent<SpriteRenderer>().sprite = ship.shipStates[3];
+                GetComponent<NavMeshAgent>().isStopped = true;
+                StartCoroutine(RemoveShip());
+            }
 
-        GetComponentInChildren<HealthBar>().SetSize(health / ship.maxHealth);
+            GetComponentInChildren<HealthBar>().SetSize(health / ship.maxHealth);
+        }
+        else if(GetComponent<NavMeshAgent>().isStopped == false) GetComponent<NavMeshAgent>().isStopped = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -76,7 +78,6 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.20f);
         deathAnim.SetActive(false);
-        GetComponent<NavMeshAgent>().isStopped = true;
         health = 0;
     }
 

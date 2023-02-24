@@ -71,22 +71,25 @@ public class GameController : MonoBehaviour
                 seconds = 60;
             }
 
-            if (spawnTimer < 1)
+            if (!victory && GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().health > 0)
             {
-                foreach (var enemy in enemyShips)
+                if (spawnTimer < 1)
                 {
-                    if (!enemy.activeSelf)
+                    foreach (var enemy in enemyShips)
                     {
-                        enemy.SetActive(true);
-                        var spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-                        enemy.transform.position = spawnPoint.transform.position;
-                        enemy.transform.rotation = spawnPoint.transform.rotation;
-                        spawnTimer = enemySpawnTime;
-                        break;
+                        if (!enemy.activeSelf)
+                        {
+                            enemy.SetActive(true);
+                            var spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                            enemy.transform.position = spawnPoint.transform.position;
+                            enemy.transform.rotation = spawnPoint.transform.rotation;
+                            spawnTimer = enemySpawnTime;
+                            break;
+                        }
                     }
                 }
+                else spawnTimer -= Time.deltaTime;
             }
-            else spawnTimer -= Time.deltaTime;
         }
 
         if (score != null) score.text = playerScore.ToString();

@@ -40,6 +40,24 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) transform.position -= transform.up * moveSpeed * Time.smoothDeltaTime;
 
+            if (frontReloadTime > 0)
+            {
+                frontReloadTime -= Time.deltaTime;
+                if (frontReloadTime < 0) frontReloadTime = 0;
+            }
+
+            if (leftReloadTime > 0)
+            {
+                leftReloadTime -= Time.deltaTime;
+                if (leftReloadTime < 0) leftReloadTime = 0;
+            }
+
+            if (rightReloadTime > 0)
+            {
+                rightReloadTime -= Time.deltaTime;
+                if (rightReloadTime < 0) rightReloadTime = 0;
+            }
+
             if (Input.GetKey(KeyCode.Space) && frontReloadTime < 1)
             {
                 foreach (var ball in cannonBalls)
@@ -55,7 +73,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            else if (frontReloadTime > 0) frontReloadTime -= Time.deltaTime;
 
             if (Input.GetKey(KeyCode.Q) && leftReloadTime < 1)
             {
@@ -81,11 +98,9 @@ public class PlayerController : MonoBehaviour
                             leftReloadTime = reloadTime;
                             break;
                         }
-                        else continue;
                     }
                 }
             }
-            else if (leftReloadTime > 0) leftReloadTime -= Time.deltaTime;
 
             if (Input.GetKey(KeyCode.E) && rightReloadTime < 1)
             {
@@ -111,11 +126,9 @@ public class PlayerController : MonoBehaviour
                             rightReloadTime = reloadTime;
                             break;
                         }
-                        else continue;
                     }
                 }
             }
-            else if (rightReloadTime > 0) rightReloadTime -= Time.deltaTime;
         }
 
         if (health >= maxHealth && GetComponent<SpriteRenderer>().sprite != shipStates[0]) GetComponent<SpriteRenderer>().sprite = shipStates[0];
